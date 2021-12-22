@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Time Tetris</title>
+	<script>
+		  (function(d) {
+		    var config = {
+		      kitId: 'itp4xbf',
+		      scriptTimeout: 3000,
+		      async: true
+		    },
+		    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+		  })(document);
+	</script>
+	<style type="text/css">
+		
+		@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
+		body{margin:0; background-color: #F2F2F2;}
+		p {}
+		img {display: block;}
+		.title {font-size:1.5vw; margin: 2.5vw 2vw;}
+
+		#menubutton{display: none;}
+	    .menu{cursor: pointer; position: relative; bottom:1vh; right:-80vw; width:auto; height:6vh; margin:2vw 0; z-index: 50;}
+ 		.nextBtn{margin: 3.4vh auto auto 60vw; height: 5vh; padding:1vh;}
+	    .container{box-sizing:border-box;  z-index:5;}
+	    .menuWin{
+	      box-sizing:border-box;
+	      text-align: center;
+	      padding-top:22vh;
+	      width:100vw;
+	      height:100vh;
+	      background-color: #F2F2F2;
+	      position:fixed;
+	      z-index:5;
+	      top:-100%;
+	      left:0;
+	      opacity:0;
+	      transition:0.35s;
+	    }
+	    .menuWin p {font-family: 'Black Han Sans', sans-serif; font-size:10vh; margin:0 0 2vh 0;}
+	    .menuWin p:hover{color:#4ADF68;}
+	    .menuWin a{text-decoration:none}
+     	.menuWin a:hover, .menuWin a:focus {color:#4ADF68; background-color: none;text-decoration:none}
+		.altop{
+			box-sizing:border-box; 
+			position:fixed; 
+			display:flex; 
+			z-index: 10; 
+			height: 10vh;
+			background-color: #f2f2f2;
+			width:100%;
+		}
+
+		input[id="menubutton"]:checked ~ .container .menuWin{top:0; opacity:1;}
+		#Home:hover, #Home:focus {color:#2A66FF; background-color: none; text-decoration: #2A66FF underline 12px;}
+     	#Play:hover, #Play:focus {color:#B8FF52; background-color: none; text-decoration: #B8FF52 underline 12px;}
+     	#About:hover, #About:focus {color:#FF1BE8; background-color: none; text-decoration: #FF1BE8 underline 12px;}
+     	#myTetris:hover, #myTetris:focus {color:#FFAB40; background-color: none; text-decoration: #FFAB40 underline 12px;}
+
+
+     	section {width:100vw; height:90vh; padding-top: 6vh;}
+     	.intro{background-image:url("./background.gif"); background-position: center center; background-repeat: no-repeat; background-size: auto;}
+     	.intro div{margin-bottom: 47vh;}
+     	h1 {font-family: 'Black Han Sans', sans-serif; font-size: 8rem; text-align: center;}
+     	h2 {font-family: 'Black Han Sans', sans-serif; font-weight: 500;
+		    font-size: 2.8rem;
+		    text-align: center;
+		    margin: 0;
+		    margin-bottom: 3vh;}
+     	button{box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.2); border:solid black 4px; padding:3vh; white-space: nowrap;}
+     	button:hover, button:focus {background-color:#ff1be8; border:solid 4px black; box-shadow: 3px 3px 5px 0px #ff1be8;}
+     	.center {display: flex; justify-content: center;align-items: center;}
+     	button p {font-family: sandoll-gothicneo1, sans-serif;
+				    font-style: normal;
+				    font-size: 1.8rem;
+				    font-weight: 700;
+				    margin: 0; text-decoration: none;}
+		.flex{display: flex;}
+		.icons {width:auto; height: 2rem; margin:0 4% 0 0;}
+		#text {display: none;}
+		#text p{font-family: font-family: sandoll-gothicneo1, sans-serif;
+				    font-style: normal;
+				    font-size: 1.2rem;
+				    text-align: center;
+				    line-height:2.6rem;
+				    margin:0;}
+		.title {font-family: 'Black Han Sans', sans-serif;font-size: 1.8rem;}
+		.a {width:48vw; margin: 0 auto; word-break: keep-all; position: sticky;  position: sticky; top:0;}
+
+	</style>
+
+</head>
+<body>
+
+	 <input type="checkbox" name="menubutton" id="menubutton">
+
+  				<div class="altop" id="altop">
+  					<div>
+                    	<p class="title">Time Tetris</p>								
+  					</div>		
+                 <div class="menu">
+						<label for="menubutton" id="menu">
+                        </label>
+                 </div>
+                        
+
+  				</div>	
+  				<section class="intro">
+  					<div><h1>Time Tetris</h1></div>
+  					<div class="center">
+  							<button onclick="show();">
+  								<p>What's Time Tetris?</p></button>
+  					</div>
+  				</section>
+  				<section id="text">
+  					<div class="a">
+  					<h2>일정 테트리스는 무슨 뜻인가요?</h2>
+  					<p>일정 테트리스는 가득 찬 스케줄 어딘가의 빈 시간에 새로운 약속이나 일정을 끼워맞추는 것이 테트리스와 닮았다고 해서 붙여진 신조어입니다. 특히 누군가와 약속을 잡거나, 여가 시간을 가지고자 할 때에 주로 쓰입니다.</p>
+  					<p>"일정 테트리스 하느라 아르바이트 시간 바꿨어."</p>
+  					<p>"일정 테트리스 해보고 있는데 머리 깨질 듯. 시간이 죽어도 안 나."</p>
+  					</div>
+  					<div>
+  					</div>
+  					<div class="center">
+  							<button onclick="show();">
+  								<p>What's Time Tetris?</p>
+  							</button>
+  					</div>
+  				</section>
+  				<section id="text">
+  					<div class="a">
+  					<h2>일정 테트리스는 무슨 뜻인가요?</h2>
+  					<p>일정 테트리스는 가득 찬 스케줄 어딘가의 빈 시간에 새로운 약속이나 일정을 끼워맞추는 것이 테트리스와 닮았다고 해서 붙여진 신조어입니다. 특히 누군가와 약속을 잡거나, 여가 시간을 가지고자 할 때에 주로 쓰입니다.</p>
+  					<p>"일정 테트리스 하느라 아르바이트 시간 바꿨어."</p>
+  					<p>"일정 테트리스 해보고 있는데 머리 깨질 듯. 시간이 죽어도 안 나."</p>
+  					</div>
+  					<div>
+  					</div>
+  					<div class="center">
+  							<button onclick="show();">
+  								<p>What's Time Tetris?</p>
+  							</button>
+  					</div>
+  				</section>
+  				<section id="text">
+  					<div class="a">
+  					<h2>일정 테트리스는 무슨 뜻인가요?</h2>
+  					<p>일정 테트리스는 가득 찬 스케줄 어딘가의 빈 시간에 새로운 약속이나 일정을 끼워맞추는 것이 테트리스와 닮았다고 해서 붙여진 신조어입니다. 특히 누군가와 약속을 잡거나, 여가 시간을 가지고자 할 때에 주로 쓰입니다.</p>
+  					<p>"일정 테트리스 하느라 아르바이트 시간 바꿨어."</p>
+  					<p>"일정 테트리스 해보고 있는데 머리 깨질 듯. 시간이 죽어도 안 나."</p>
+  					</div>
+  					<div>
+  					</div>
+  					<div class="center">
+  							<button onclick="show();">
+  								<p>What's Time Tetris?</p>
+  							</button>
+  					</div>
+  				</section>
+  				
+
+
+
+
+
+
+
+
+
+           <div class="container">
+                <div class="menuWin">
+                  <p><a id="Home" href="./index.html">Home</a></p>
+                  <p><a id="Play" href="./Play.html">Play</a></p>
+                  <p><a id="About" href="">About</a></p>
+                  <p><a id="myTetris" href="./myTetris.html">My Tetris</a></p>
+                </div>
+          </div>
+
+
+
+
+
+
+
+
+    <script src="./lottie.js" type="text/javascript"></script>
+	<script src="./index.js"></script>
+	<script type="text/javascript">
+		function show(){document.getElementById('text').style.display = "block";}
+	</script>
+
+
+</body>
+</html>

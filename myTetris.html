@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<link rel="stylesheet" href="style.css"></link>
+	<title>Time Tetris</title>
+	<script>
+		  (function(d) {
+		    var config = {
+		      kitId: 'itp4xbf',
+		      scriptTimeout: 3000,
+		      async: true
+		    },
+		    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+		  })(document);
+	</script>
+	<style type="text/css">
+
+		@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
+		body{margin:0; background-color: #F2F2F2;}
+		p {font-family: 'Black Han Sans', sans-serif; margin: 0.2vh 0; font-size: 2rem;}
+		img {display: block; margin: 0 auto;}
+		.title {font-size:1.5vw; margin: 2.5vw 2vw;}
+		#timer {font-size: 2vw;}
+		#score {font-size: 2vw;}
+
+
+		#menubutton{display: none;}
+	    .menu{cursor: pointer; position: relative; bottom:1vh; left:-4vw; width:auto; height:6vh; margin:2vw 0;}
+ 		.nextBtn{margin: 3.4vh auto auto 60vw; height: 5vh; padding:1vh;}
+	    .container{box-sizing:border-box;  z-index:5;}
+	    .menuWin{
+	      box-sizing:border-box;
+	      text-align: center;
+	      padding-top:22vh;
+	      width:100vw;
+	      height:100vh;
+	      background-color: #F2F2F2;
+	      position:fixed;
+	      z-index:5;
+	      top:-100%;
+	      left:0;
+	      opacity:0;
+	      transition:0.35s;
+	    }
+	    .menuWin p {font-family: 'Black Han Sans', sans-serif; font-size:10vh; margin:0 0 2vh 0;}
+	    .menuWin p:hover{color:#4ADF68;}
+	    .menuWin a{text-decoration:none}
+     	.menuWin a:hover, .menuWin a:focus {color:#4ADF68; background-color: none;text-decoration:none}
+		.altop{
+			box-sizing:border-box; 
+			position:fixed; 
+			display:flex; 
+			z-index: 10; 
+			height: 10vh;
+			background-color: #f2f2f2;
+			width:100%;
+			grid-auto-rows: 25%;
+		}
+
+		input[id="menubutton"]:checked ~ .container .menuWin{top:0; opacity:1;}
+
+
+    	.center {width: 100vw; text-align: center; font-family: sandoll-gothicneo1, sans-serif; font-weight: 300; font-style: normal; font-size: 1.2vw; padding-top: 38vh; letter-spacing: .5rem;}
+    	.cardContainer {
+    		width: 95vw; 
+    		box-sizing: border-box; 
+    		padding: 8vh 3vw;
+    		justify-content: space-between; 
+    		display: grid; 
+    		grid-gap: 5vh 5vw; 
+    		grid-template-columns: 
+    		18vw 18vw 18vw 18vw;
+    		grid-template-rows: 9vh 9vh 9vh 9vh 9vh 9vh 9vh 9vh;}
+
+    	.flex {display: flex; justify-content: space-between;}
+    	.fixed {position: fixed; bottom:8vh; right:5vw; width:7vw; height: 7vw; background-color:#F2F2F2; font-family: 'Black Han Sans', sans-serif; font-size: 8rem; border:0; z-index: 2;box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.2);}
+    	.relative{position: relative;}
+
+    	#plusBtn:hover, #plusBtn:focus {background-color:#ffab40; border:solid 4px black; box-shadow: 3px 3px 5px 0px #ffab40;}
+    	#plusBtn {border:solid 4px black; box-sizing: border-box;}
+    	#plusBtn img{width:70%; margin:0 auto;}
+    	.pop {position: absolute; top:50%; left:50%; background-color: white; transform: translate(-50%,-50%); overflow-x: hidden;}
+    	.popUp {width:58vw; height: 70vh; padding:5vh 0; box-sizing: border-box; 
+    		z-index: 12; 
+    		text-align: center;
+    		position: fixed;
+    		/*before activate */
+    		opacity:0;
+    		display: none;
+    		border:solid black 4px;
+    		transform:translate(-50%,-50%) scale(0.5);
+    		transition: opacity 300ms ease-in-out,
+    					top 800ms ease-in-out,
+    					transform 800ms ease-in-out;}
+    	.popUp.active {
+    		opacity: 1;
+    		display: block;
+    		top:50%;
+    		transform:translate(-50%,-50%) scale(1);
+    		transition: transform 300ms cubic-bezier(0.18,0.89,0.43,1.19);
+
+    	}
+    	.topBtn{padding: 0 10vh 0 10vh; position: relative;}
+    	.popUp .addbutton button {padding-top: 45vh; padding:1vh; transition: all 300ms ease-in-out; cursor:pointer;}
+    	.popUp .addbutton button:hover{
+
+    	}
+    	
+
+    	.full{width:100%; height: 15vh; display:inline-block;}
+    	.fill{width:100%; display:inline-block;}
+    	.nowrap {white-space: nowrap; display:inline-block; width: 100%;}
+    	.pop input {display: none;}
+    	.pop li {display: inline-block; vertical-align: middle; transition: all 500ms;}
+    	.pop li a {display: block; position: relative;
+    	}
+    	.pop .slidelist label{
+    		position: absolute; z-index: 3; top:50%; transform: translateY(-50%); cursor: pointer;
+    	}
+
+    	#closeBtn {position: absolute; right:2.5vw; top:0;}
+    	.topBtn .left{
+    		left:5vw;
+    		width: 0;
+			height: 0;
+			border-top: 25px solid transparent;
+			border-right: 50px solid black;
+			border-bottom: 25px solid transparent;
+    	}
+    	.topBtn .right{
+    		right:5vw;
+    		width: 0;
+			height: 0;
+			border-top: 25px solid transparent;
+			border-left: 50px solid black;
+			border-bottom: 25px solid transparent;
+    	}
+    	.topArr {width:25vw; display: flex; justify-content: space-between; margin:0 auto;}
+    	.topBtn .slide-control {display:none;}
+    	.pop [id="slide1"]:checked ~ .topBtn .con1 {display: block;}
+    	.pop [id="slide2"]:checked ~ .topBtn .con2 {display: block;}
+    	.pop [id="slide3"]:checked ~ .topBtn .con3 {display: block;}
+    	.pop [id="slide4"]:checked ~ .topBtn .con4 {display: block;}
+
+    	.pop [id="slide1"]:checked ~ .nowrap .slidelist > li {transform: translateX(0%); }
+    	.pop [id="slide2"]:checked ~ .nowrap .slidelist > li {transform: translateX(-50%);}
+    	.pop [id="slide3"]:checked ~ .nowrap .slidelist > li {transform: translateX(-101%);}
+
+    	
+
+    	#grid1 > div {}
+    	.grid {
+			width:110vw; 
+			height:50vh; 
+			display: flex; 
+			
+			justify-content: space-around;
+			box-sizing: border-box;
+			padding:2vw;
+			margin: 0 auto;
+			box-shadow: 10px 10px 15px inset rgba(0, 0, 0, 0.2);}
+		.fl1 {width:35vw; height:20vh; margin:auto; }
+		.fl2 {width:22vw; margin:auto;}
+		.fl3 {width:40vw; margin:auto;}
+		.b{margin-bottom:5vh;}
+
+		.slidelist img {object-fit: contain; cursor: pointer; width:auto; max-width: 15vw;}
+
+		.card {width:100%; height:auto; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.2); border-radius: 2vw;  padding:2vw; margin: 2vh 0; float: left;}
+		.height1{ grid-row-end: span 3;}
+		.height2{ grid-row-end: span 5;}
+		.height3{ grid-row-end: span 4;}
+		.height4{ grid-row-end: span 5; }
+		.tetimg { margin-left: auto; margin-right: auto; display: block; padding-bottom: 2vw; object-fit: contain; width:80%;}
+		#inputdiv {margin-left: auto; margin-right: auto;  text-align:center;}
+		textarea {font-family: sandoll-gothicneo1, sans-serif; font-weight: 300; font-style: normal; font-size: 2vw; background-color: #f2f2f2; border: 0; width:100%; text-align: center;}
+
+		#Home:hover, #Home:focus {color:#2A66FF; background-color: none; text-decoration: #2A66FF underline 12px;}
+     	#Play:hover, #Play:focus {color:#B8FF52; background-color: none; text-decoration: #B8FF52 underline 12px;}
+     	#About:hover, #About:focus {color:#FF1BE8; background-color: none; text-decoration: #FF1BE8 underline 12px;}
+     	#myTetris:hover, #myTetris:focus {color:#FFAB40; background-color: none; text-decoration: #FFAB40 underline 12px;}
+     	
+     	button{box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.2); border:solid black 4px; padding:3vh; white-space: nowrap;}
+     	button p{font-family: sandoll-gothicneo1, sans-serif; font-weight: 700; font-style: normal; font-size: 1.2vw; color:black; border:none;}
+     	a{text-decoration: none; }
+     	.tooltip{background-color: black; color:white; z-index: 2; visibility: hidden; text-align: center; padding:5px; position: absolute; top: 5vw; left: 12vw;}
+     	.tooltips{background-color: black; color:white; z-index: 2; visibility: hidden; text-align: center; padding:5px; position: absolute; top: 5vw; left: 12vw;}
+
+     	.tool:hover ~ .tooltip {visibility: visible;}
+     	.tools:hover ~ .tooltips {visibility: visible;}
+     	.is-blurred {filter: blur(2px); background-color:rgba(0, 0, 0, 0.6);position:fixed; width:100%;height: 100%; z-index:11;display: block;}
+     	.hidden{position:fixed; width:100%;height: 100%; z-index:11; display: none;}
+     	#nextBtn:hover {box-shadow: 3px 3px 5px 0px #ffab40; border:solid black 4px; background-color:#ffab40;}
+
+	</style>
+</head>
+<body>
+	<div id="background"></div>
+	 <input type="checkbox" name="menubutton" id="menubutton">
+
+  				<div class="altop" id="altop">
+  					<div>
+                    	<p class="title">Time Tetris</p>								
+  					</div>
+  				<button class="nextBtn" id="nextBtn" onclick="Send();"><a href="./test.html"><p>테트리스 만들기</p></a></button>			
+                 <div class="menu">
+						<label for="menubutton" id="menu">
+                        </label>
+                 </div>
+                        
+
+  				</div>	
+
+           <div class="container">
+                <div class="menuWin">
+                  <p><a id="Home" href="./index.html">Home</a></p>
+                  <p><a id="Play" href="./Play.html">Play</a></p>
+                  <p><a id="About" href="">About</a></p>
+                  <p><a id="myTetris" href="./myTetris.html">My Tetris</a></p>
+                </div>
+          </div>
+
+		<button class="fixed" id="plusBtn"><img src="./plus.png"></button>
+		
+		<div class="popUp pop" id="popUp">
+			<input type="radio" name="slide" id="slide1" checked>
+			<input type="radio" name="slide" id="slide2">
+			<input type="radio" name="slide" id="slide3">
+			<input type="radio" name="slide" id="slide4">
+			
+			<div class="topBtn addbutton flex">
+				<div class="topArr">
+					<label for="slide4" class="left slide-control con1"></label>
+					<label for="slide1" class="left slide-control con2"></label>
+					<label for="slide2" class="left slide-control con3"></label>
+					<label for="slide3" class="left slide-control con4"></label>
+					<p id="hour"></p>
+					<label for="slide2" class="right slide-control con1"></label>
+					<label for="slide3" class="right slide-control con2"></label>
+					<label for="slide4" class="right slide-control con3"></label>
+					<label for="slide1" class="right slide-control con4"></label>
+				</div>
+				<button id="closeBtn"><p>close</p></button>
+			</div>
+			<div class="nowrap">
+				<ul class="full flex slidelist">
+					<li class="fill" id="P01">
+						<a>
+						<div id="grid1" class="grid flex nowrap">
+							<div>
+								<div class="flex b fl1 relative">
+									<img class="tool" src="./1~3/sO.svg" onclick="addsO();  CloseWin();" title="1시간">
+									<p class="tooltip">1시간</p>
+									<img  class="tools" src="./1~3/sI.svg" onclick="addsI();  CloseWin();">
+									<p class="tooltips">2시간</p>
+								</div>
+								<div class="fl1  relative">
+									<img class="tool" src="./1~3/sL.svg" onclick="addsL();  CloseWin();">
+									<p class="tooltip">3시간</p>
+								</div>
+							</div>
+							<div class="fl2 relative">
+								<img class="tool" src="./1~3/I.svg" onclick="addI();  CloseWin();">
+								<p class="tooltip">3시간</p>
+							</div>
+							<div class="fl2 relative">
+								<img class="tool" src="./1~3/bI.svg" onclick="addbI();  CloseWin();">
+								<p class="tooltip">4시간</p>
+							</div>
+							<div class="fl3">
+								<div class="flex b relative">
+									<img class="tool" src="./1~3/O.svg" onclick="addO();  CloseWin();">
+									<p class="tooltip">4시간</p>
+									<img class="tools" src="./1~3/H.svg" onclick="addH();  CloseWin();">
+									<p class="tooltips">4시간</p>
+								</div>
+								<div class="relative">
+									<img class="tool" src="./1~3/U.svg" onclick="addU();  CloseWin();">
+									<p class="tooltip">5시간</p>
+								</div>
+							</div>
+						</div>
+						</a>
+					</li>
+					
+				</ul>
+			</div>
+
+			
+		</div>
+
+
+     <div id="cardContainer" class="cardContainer">
+     	<div class = "center" id="notice">
+     		
+     	</div>
+     </div>
+     </section>
+
+	<script src="./lottie.js" type="text/javascript"></script>
+	<script src="./index.js"></script>
+
+	<script>
+		function resizeGridItem(card){
+		   grid = document.getElementsByClassName("cardContainer")[0];
+		   rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'));
+		   rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
+		   rowSpan = Math.ceil((item.querySelector('.content').getBoundingClientRect().height+rowGap)/(rowHeight+rowGap));
+		   item.style.gridRowEnd = "span "+rowSpan;
+		}
+		function resizeAllGridItems(){
+	   allItems = document.getElementsByClassName("card");
+	   for(x=0;x<allItems.length;x++){
+	      resizeGridItem(allItems[x]);
+	   }
+	}
+
+
+	window.onload = resizeAllGridItems();
+
+	window.addEventListener("resize", resizeAllGridItems);
+
+
+	</script>
+	
+
+	<script type="text/javascript">
+
+
+		document.getElementById("notice").innerHTML = "일정을 추가해 주세요."
+		document.getElementById("plusBtn").addEventListener("click",function(){
+			var notices = document.getElementById("notice"); notices.style.display = 'none';
+			document.getElementsByClassName("popUp")[0].classList.add("active");
+			document.getElementById("background").classList.remove("hidden");
+			document.getElementById("background").classList.add("is-blurred")
+		});
+
+		document.getElementById("closeBtn").addEventListener("click",function(){
+			document.getElementsByClassName("popUp")[0].classList.remove("active"); 
+			document.getElementById("background").classList.remove("is-blurred");
+			document.getElementById("background").classList.add("hidden");
+		});
+
+
+		function backtoHidden () {document.getElementById("background").classList.remove("is-blurred");
+			document.getElementById("background").classList.add("hidden");}
+		function innerText (){
+			if(document.getElementById("slide1").checked) {document.getElementById('hour').innerHTML = "테트리스를 고르세요"
+		} else if (document.getElementById("slide2").checked) {document.getElementById('hour').innerHTML = "3시간"} else if (document.getElementById("slide3").checked) {document.getElementById('hour').innerHTML = "4시간"};};
+		innerText();
+
+		t = 0
+
+		function CloseWin(){
+			document.getElementsByClassName("popUp")[0].classList.remove("active"); 
+		}
+
+
+		var Shape = []
+		var InputText = []
+
+
+		function addsO(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'sO'
+				Shape.push(id);
+				
+				addCard.className = 'card height1';
+				element.appendChild(addCard);
+
+
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/sO.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addsI(){ 	
+				t++
+				var element = document.getElementById("cardContainer");
+				//카드 넣기
+					var addCard = document.createElement('div');
+					var id = 'sI'
+					Shape.push(id);
+					console.log(Shape);
+					addCard.className = 'card height1';
+					element.appendChild(addCard);
+
+				//이미지 넣기
+					var addimg = document.createElement('img');
+					addimg.src = "./1~3/sI.svg";
+					addimg.className = "tetimg content";
+					addCard.appendChild(addimg);
+
+				//input 넣기
+					
+					var addinput = document.createElement('textarea');
+					addinput.placeholder = '일정을 입력하세요';
+					addinput.setAttribute("type","text");
+					addinput.className = 'inputValue content';
+					addinput.name = "array[]";
+					addinput.cols = 15;
+					addinput.rows = 3;
+					
+					addCard.appendChild(addinput);
+					backtoHidden();
+		 	}
+
+			function addI(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'I'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height2';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/I.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addsL(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'sL'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height3';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/sL.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addbI(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'bI'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height4';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/bI.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addO(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'O'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height3';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/O.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addH(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'H'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height3';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/H.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function addU(){ 	
+			t++
+			var element = document.getElementById("cardContainer");
+			//카드 넣기
+				var addCard = document.createElement('div');
+				var id = 'U'
+				Shape.push(id);
+				console.log(Shape);
+				addCard.className = 'card height3';
+				element.appendChild(addCard);
+
+			//이미지 넣기
+				var addimg = document.createElement('img');
+				addimg.src = "./1~3/U.svg";
+				addimg.className = "tetimg content";
+				addCard.appendChild(addimg);
+
+			//input 넣기
+				
+				var addinput = document.createElement('textarea');
+				addinput.placeholder = '일정을 입력하세요';
+				addinput.setAttribute("type","text");
+				addinput.name = "array[]";
+				addinput.className = 'inputValue content';
+				addinput.cols = 15;
+				addinput.rows = 3;
+				
+				addCard.appendChild(addinput);
+				backtoHidden();
+		 	}
+
+		 	function Send() {
+		 		var txtInput = document.getElementsByName('array[]');
+		 		for (var i = 0; i < Shape.length; i++) {
+		 			var a = txtInput[i];
+		 			k = txtInput[i].value;
+		 			InputText.push(k);
+		 		}
+		 		
+
+		 		var sendArr = [];
+		 		
+		 		for(var j = 0; j< Shape.length; j++){
+		 			sendArr.push(Shape[j], "@",InputText[j],"#");
+
+		 		}
+		 		var gameText = sendArr.join('');
+		 		console.log(gameText);
+		 		localStorage.setItem("blockdata",gameText);
+
+		 	}
+
+		 
+	</script>
+
+
+</body>
+</html>

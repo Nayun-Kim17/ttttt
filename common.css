@@ -1,0 +1,22 @@
+#menubutton{display: none;}
+.menuWin{
+	      box-sizing:border-box;
+	      text-align: center;
+	      padding-top:22vh;
+	      width:100vw;
+	      height:100vh;
+	      background-color: #F2F2F2;
+	      position:fixed;
+	      z-index:2;
+	      top:-100%;
+	      left:0;
+	      opacity:0;
+	      transition:0.35s;
+	    }
+	    .menuWin p {font-family: 'Black Han Sans', sans-serif; font-size:10vh; margin:0 0 2vh 0;}
+
+	    .menuWin a{text-decoration:none; color: #471D89;}
+	    #Home:hover, #Home:focus {color:#2A66FF; background-color: none; text-decoration: #2A66FF underline 12px;}
+     	#Play:hover, #Play:focus {color:#B8FF52; background-color: none; text-decoration: #B8FF52 underline 12px;}
+     	#About:hover, #About:focus {color:#FF1BE8; background-color: none; text-decoration: #FF1BE8 underline 12px;}
+     	#myTetris:hover, #myTetris:focus {color:#FFAB40; background-color: none; text-decoration: #FFAB40 underline 12px;}
